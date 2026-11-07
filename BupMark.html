@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বিইউপি মার্কস ক্যালকুলেটর – SSC + HSC</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6f1;--card:#fff;--ink:#14261c;--mute:#5b6b61;--line:#d9e2da;--g:#0f6b3f;--g2:#1f9d62;--navy:#14305a;--gold:#c8962e;--bad:#b3261e;--track:#e4ebe5}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1612;--card:#16221b;--ink:#e8f0ea;--mute:#98aa9f;--line:#27382d;--g:#34c07c;--g2:#5ed79b;--navy:#8fb2ec;--gold:#e0b04d;--bad:#ff8a80;--track:#223128}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hind Siliguri',system-ui,sans-serif;line-height:1.6;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+.wrap{max-width:720px;margin:0 auto;padding:18px 16px 48px}
+header{padding:22px 0 8px}
+header .tag{display:inline-block;font-size:13px;color:var(--g);font-weight:600;border:1px solid var(--g);border-radius:99px;padding:1px 12px}
+h1{font-family:'Noto Serif Bengali',serif;font-weight:800;font-size:clamp(26px,7vw,38px);line-height:1.25;margin:10px 0 6px;color:var(--navy)}
+header p{color:var(--mute);margin:0;max-width:52ch}
+.formula{display:flex;gap:8px;margin:18px 0 6px;flex-wrap:wrap}
+.formula div{flex:1 1 90px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:center}
+.formula b{display:block;font-size:22px;color:var(--g)}
+.formula span{font-size:13px;color:var(--mute)}
+section.box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}
+section.box h2{font-size:19px;margin:0 0 2px;color:var(--navy)}
+section.box .sub{color:var(--mute);font-size:14px;margin:0 0 14px}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:15px;margin-bottom:4px}
+.field label small{font-weight:400;color:var(--mute)}
+.field input{width:100%;font:inherit;font-size:18px;padding:11px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);outline:none;transition:border-color .15s}
+.field input:focus{border-color:var(--g);box-shadow:0 0 0 3px color-mix(in srgb,var(--g) 22%,transparent)}
+.field input.err{border-color:var(--bad)}
+.field .msg{color:var(--bad);font-size:13px;min-height:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.row{grid-template-columns:1fr}}
+.hint{background:color-mix(in srgb,var(--gold) 14%,transparent);border-left:3px solid var(--gold);border-radius:8px;padding:8px 12px;font-size:13.5px;color:var(--ink);margin:2px 0 14px}
+.opt{border-style:dashed}
+button.go{width:100%;margin-top:20px;font:inherit;font-size:19px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g),var(--g2));border:0;border-radius:14px;padding:14px;cursor:pointer;transition:transform .12s}
+button.go:active{transform:scale(.98)}
+button.go:focus-visible,.reset:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.reset{background:none;border:0;color:var(--mute);font:inherit;text-decoration:underline;cursor:pointer;margin:10px auto 0;display:block}
+#result{display:none;margin-top:18px}
+.total{background:var(--navy);color:#fff;border-radius:20px;padding:22px 18px;text-align:center}
+@media (prefers-color-scheme:dark){.total{background:#1b3a63}}
+.total .lbl{font-size:15px;opacity:.85}
+.total .num{font-family:'Noto Serif Bengali',serif;font-size:clamp(46px,14vw,68px);font-weight:800;line-height:1.2}
+.total .num small{font-size:.38em;font-weight:600;opacity:.8}
+.bar{margin-top:14px}
+.bar .top{display:flex;justify-content:space-between;gap:8px;font-weight:600;font-size:15px;margin-bottom:5px}
+.bar .top span:last-child{color:var(--g)}
+.track{height:16px;border-radius:99px;background:var(--track);overflow:hidden}
+.fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--g),var(--g2));transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.fill.n{background:linear-gradient(90deg,var(--navy),#4a78c4)}
+.fill.t{background:linear-gradient(90deg,var(--gold),#e8c46a)}
+.total .track{background:rgba(255,255,255,.2)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:6px}
+td{padding:7px 0;border-bottom:1px dashed var(--line)}
+td:last-child{text-align:right;font-weight:600;white-space:nowrap}
+td.neg{color:var(--bad)}
+.note{font-size:13px;color:var(--mute);margin-top:22px}
+footer{font-size:13px;color:var(--mute);margin-top:26px;text-align:center}
+@media(prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="tag">BUP Admission</span>
+  <h1>বিইউপি মার্কস ক্যালকুলেটর</h1>
+  <p>এসএসসি ও এইচএসসির মোট নম্বর দাও। কোন কোন বিষয়ের মার্ক বাদ যাবে, সেটা আমরাই হিসাব করে দেব।</p>
+  <div class="formula">
+    <div><b>২০%</b><span>এসএসসি</span></div>
+    <div><b>২৫%</b><span>এইচএসসি</span></div>
+    <div><b>৫৫%</b><span>লিখিত/MCQ</span></div>
+    <div><b>১০০</b><span>মোট</span></div>
+  </div>
+</header>
+
+<section class="box">
+  <h2>এসএসসি</h2>
+  <p class="sub">মার্কশিট দেখে লেখো</p>
+  <div class="field"><label for="ssc">এসএসসিতে মোট প্রাপ্ত নম্বর <small>(৪র্থ বিষয়সহ, সর্বোচ্চ ১৩০০)</small></label>
+    <input id="ssc" inputmode="decimal" placeholder="যেমন: ১১৮০"><div class="msg"></div></div>
+  <div class="row">
+    <div class="field"><label for="pe">শারীরিক শিক্ষা <small>(১০০ এর মধ্যে)</small></label>
+      <input id="pe" inputmode="decimal" placeholder="যেমন: ৮৫"><div class="msg"></div></div>
+    <div class="field"><label for="ce">ক্যারিয়ার শিক্ষা <small>(৫০ এর মধ্যে)</small></label>
+      <input id="ce" inputmode="decimal" placeholder="যেমন: ৪২"><div class="msg"></div></div>
+  </div>
+  <div class="field"><label for="ssc4">এসএসসির ৪র্থ বিষয়ের নম্বর <small>(১০০ এর মধ্যে)</small></label>
+    <input id="ssc4" inputmode="decimal" placeholder="যেমন: ৭৮"><div class="msg"></div></div>
+  <div class="hint">এসএসসিতে শারীরিক শিক্ষা (১০০), ক্যারিয়ার শিক্ষা (৫০) ও ৪র্থ বিষয়ের ৪০ বাদ যায়। বাকি থাকে ১৩০০ − ১৯০ = <b>১১১০</b>।</div>
+</section>
+
+<section class="box">
+  <h2>এইচএসসি</h2>
+  <p class="sub">মার্কশিট দেখে লেখো</p>
+  <div class="field"><label for="hsc">এইচএসসিতে মোট প্রাপ্ত নম্বর <small>(৪র্থ বিষয়সহ, সর্বোচ্চ ১৩০০)</small></label>
+    <input id="hsc" inputmode="decimal" placeholder="যেমন: ১১০০"><div class="msg"></div></div>
+  <div class="field"><label for="hsc4">এইচএসসির ৪র্থ বিষয়ের নম্বর <small>(২০০ এর মধ্যে)</small></label>
+    <input id="hsc4" inputmode="decimal" placeholder="যেমন: ১৪০"><div class="msg"></div></div>
+  <div class="hint">এইচএসসিতে শুধু ৪র্থ বিষয়ের ৮০ বাদ যায়। বাকি থাকে ১৩০০ − ৮০ = <b>১২২০</b>।</div>
+</section>
+
+<section class="box opt">
+  <h2>ভর্তি পরীক্ষার নম্বর <small style="font-weight:400;color:var(--mute)">(ঐচ্ছিক)</small></h2>
+  <p class="sub">দিলে ৫৫ এ কনভার্ট করে চূড়ান্ত ১০০ এর স্কোর দেখাব</p>
+  <div class="row">
+    <div class="field"><label for="wr">লিখিত/MCQ এ প্রাপ্ত নম্বর</label>
+      <input id="wr" inputmode="decimal" placeholder="যেমন: ৬৫"><div class="msg"></div></div>
+    <div class="field"><label for="wrt">পরীক্ষার পূর্ণমান</label>
+      <input id="wrt" inputmode="decimal" value="১০০"><div class="msg"></div></div>
+  </div>
+</section>
+
+<button class="go" id="go">হিসাব করো</button>
+<button class="reset" id="reset" type="button">সব মুছে নতুন করে শুরু</button>
+
+<div id="result" aria-live="polite">
+  <div class="total">
+    <div class="lbl" id="tl">এসএসসি + এইচএসসি মোট</div>
+    <div class="num"><span id="tn">0</span><small id="tmax"> / ৪৫</small></div>
+    <div class="bar"><div class="track"><div class="fill t" id="ft" style="background:linear-gradient(90deg,#8fe0b4,#fff)"></div></div></div>
+  </div>
+
+  <section class="box">
+    <h2>বিস্তারিত</h2>
+    <div class="bar"><div class="top"><span>এসএসসি</span><span id="s1"></span></div><div class="track"><div class="fill" id="f1"></div></div></div>
+    <div class="bar"><div class="top"><span>এইচএসসি</span><span id="s2"></span></div><div class="track"><div class="fill n" id="f2"></div></div></div>
+    <div class="bar" id="wbar" style="display:none"><div class="top"><span>লিখিত/MCQ</span><span id="s3"></span></div><div class="track"><div class="fill t" id="f3"></div></div></div>
+  </section>
+
+  <section class="box">
+    <h2>হিসাবের ধাপ</h2>
+    <table id="steps"></table>
+  </section>
+
+  <section class="box">
+    <h2>PDF রিপোর্ট</h2>
+    <p class="sub">সব নম্বর ও হিসাব একটি সুন্দর PDF এ সংরক্ষণ করো</p>
+    <div class="field"><label for="sname">নাম <small>(ঐচ্ছিক, PDF এ থাকবে)</small></label>
+      <input id="sname" placeholder="স্টুডেন্টের নাম" autocomplete="name"></div>
+    <button class="go" id="pdfbtn" type="button" style="margin-top:4px">PDF ডাউনলোড করো</button>
+  </section>
+</div>
+
+<p class="note">দ্রষ্টব্য: ৪র্থ বিষয়ের নম্বর থেকে সর্বোচ্চ ৪০% (এসএসসিতে ৪০, এইচএসসিতে ৮০) বাদ ধরা হয়েছে। ফলাফল আনুমানিক; চূড়ান্ত নিয়ম ও নম্বর বিইউপির অফিসিয়াল নোটিশ থেকে মিলিয়ে নিও।</p>
+<footer><b style="color:var(--ink)">ওয়েবসাইট তৈরি করেছেন MD Tahsin Islam</b></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const en=s=>String(s).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)).replace(/[,\s]/g,'').replace('।','.');
+const f2=n=>bn((Math.round(n*100)/100).toFixed(2));
+function val(id,max,req=true){
+  const el=$(id),box=el.nextElementSibling,raw=en(el.value);
+  el.classList.remove('err');box.textContent='';
+  if(raw===''){ if(req){el.classList.add('err');box.textContent='এই ঘরটি পূরণ করো';} return req?null:undefined; }
+  const v=Number(raw);
+  if(isNaN(v)||v<0||v>max){el.classList.add('err');box.textContent='০ থেকে '+bn(max)+' এর মধ্যে সংখ্যা দাও';return null;}
+  return v;
+}
+function anim(id,pct){const e=$(id);e.style.width='0';requestAnimationFrame(()=>requestAnimationFrame(()=>e.style.width=Math.min(100,pct)+'%'));}
+function count(el,to,max){const t0=performance.now();(function s(t){const p=Math.min(1,(t-t0)/1000),e=1-Math.pow(1-p,3);el.textContent=f2(to*e);if(p<1)requestAnimationFrame(s);})(t0);}
+$('go').onclick=()=>{
+  const ssc=val('ssc',1300),pe=val('pe',100),ce=val('ce',50),s4=val('ssc4',100),
+        hsc=val('hsc',1300),h4=val('hsc4',200);
+  const wrt=val('wrt',100000,false);
+  const wr=val('wr',wrt&&wrt>0?wrt:100,false);
+  if([ssc,pe,ce,s4,hsc,h4].includes(null)||wr===null){const e=document.querySelector('.err');e&&e.scrollIntoView({block:'center'});return;}
+  if(ssc<pe+ce+s4-0){/* sanity */}
+  const s4cut=Math.min(s4,40), h4cut=Math.min(h4,80);
+  const sBase=1110, hBase=1220;
+  const sAdj=ssc-pe-ce-s4cut, hAdj=hsc-h4cut;
+  if(sAdj<0||hAdj<0){alert('নম্বরগুলো মিলছে না। মোট নম্বর বিষয়ভিত্তিক নম্বরের চেয়ে কম হতে পারে না।');return;}
+  const sP=sAdj/sBase*20, hP=hAdj/hBase*25, t45=sP+hP;
+  let wP=null;
+  if(wr!==undefined&&wr!==null){wP=wr/(wrt||100)*55;}
+  window.last={ssc,pe,ce,s4,s4cut,sAdj,sP,hsc,h4,h4cut,hAdj,hP,t45,wr:(wr===undefined?null:wr),wrt:wrt||100,wP};
+  $('result').style.display='block';
+  count($('tn'),wP===null?t45:t45+wP);
+  $('tl').textContent=wP===null?'এসএসসি + এইচএসসি মোট':'চূড়ান্ত মোট স্কোর';
+  $('tmax').textContent=wP===null?' / ৪৫':' / ১০০';
+  anim('ft',wP===null?t45/45*100:(t45+wP));
+  $('s1').textContent=f2(sP)+' / ২০';anim('f1',sP/20*100);
+  $('s2').textContent=f2(hP)+' / ২৫';anim('f2',hP/25*100);
+  $('wbar').style.display=wP===null?'none':'block';
+  if(wP!==null){$('s3').textContent=f2(wP)+' / ৫৫';anim('f3',wP/55*100);}
+  const R=(a,b,c)=>`<tr><td${c?' class="neg"':''}>${a}</td><td${c?' class="neg"':''}>${b}</td></tr>`;
+  $('steps').innerHTML=
+    R('এসএসসি মোট',bn(ssc))+R('− শারীরিক শিক্ষা','−'+bn(pe),1)+R('− ক্যারিয়ার শিক্ষা','−'+bn(ce),1)+R('− ৪র্থ বিষয় (সর্বোচ্চ ৪০)','−'+bn(s4cut),1)+
+    R('এসএসসি গণনাযোগ্য',bn(sAdj)+' / ১১১০')+R('এসএসসি ('+bn(sAdj)+' ÷ ১১১০) × ২০',f2(sP))+
+    R('এইচএসসি মোট',bn(hsc))+R('− ৪র্থ বিষয় (সর্বোচ্চ ৮০)','−'+bn(h4cut),1)+
+    R('এইচএসসি গণনাযোগ্য',bn(hAdj)+' / ১২২০')+R('এইচএসসি ('+bn(hAdj)+' ÷ ১২২০) × ২৫',f2(hP))+
+    R('এসএসসি + এইচএসসি',f2(t45)+' / ৪৫')+
+    (wP===null?'':R('লিখিত/MCQ → ৫৫ এ কনভার্ট',f2(wP))+R('সর্বমোট',f2(t45+wP)+' / ১০০'));
+  $('result').scrollIntoView({behavior:'smooth',block:'start'});
+};
+function pbar(p,c){return `<div style="height:12px;background:#e4ebe5;border-radius:9px;overflow:hidden"><div style="height:100%;width:${Math.max(0,Math.min(100,p))}%;background:${c};border-radius:9px"></div></div>`;}
+function buildReport(L,name){
+  const d=bn(new Date().toLocaleDateString('en-GB'));
+  const row=(a,b,neg)=>`<tr><td style="padding:6px 0;border-bottom:1px dashed #cfd9d1;${neg?'color:#b3261e;':''}">${a}</td><td style="padding:6px 0;border-bottom:1px dashed #cfd9d1;text-align:right;font-weight:600;${neg?'color:#b3261e;':''}">${b}</td></tr>`;
+  const sec=(t,s)=>`<div style="margin:14px 0 4px;font-weight:700;font-size:16px;color:#14305a">${t}</div>`+s;
+  const grand=L.wP===null?L.t45:L.t45+L.wP, gmax=L.wP===null?45:100;
+  const bars=(l,v,m,c)=>`<div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-weight:600;font-size:14px;margin-bottom:4px"><span>${l}</span><span style="color:#0f6b3f">${f2(v)} / ${bn(m)}</span></div>${pbar(v/m*100,c)}</div>`;
+  return `<div style="width:794px;padding:36px 44px 28px;background:#fff;color:#14261c;font-family:'Hind Siliguri',sans-serif;line-height:1.55;font-size:14px">
+  <div style="border-bottom:3px solid #0f6b3f;padding-bottom:10px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div><div style="font-family:'Noto Serif Bengali',serif;font-weight:800;font-size:26px;color:#14305a">বিইউপি মার্কস রিপোর্ট</div>
+    <div style="color:#5b6b61;font-size:13px">BUP Admission · SSC + HSC নম্বর হিসাব</div></div>
+    <div style="text-align:right;font-size:13px;color:#5b6b61">তারিখ: ${d}${name?`<br><b style="color:#14261c;font-size:15px">${name.replace(/</g,'&lt;')}</b>`:''}</div>
+  </div>
+  <div style="margin-top:16px;background:#14305a;color:#fff;border-radius:16px;padding:16px;text-align:center">
+    <div style="opacity:.85">${L.wP===null?'এসএসসি + এইচএসসি মোট':'চূড়ান্ত মোট স্কোর'}</div>
+    <div style="font-family:'Noto Serif Bengali',serif;font-weight:800;font-size:50px;line-height:1.25">${f2(grand)}<span style="font-size:20px;opacity:.8"> / ${bn(gmax)}</span></div>
+    <div style="height:12px;background:rgba(255,255,255,.22);border-radius:9px;overflow:hidden;margin-top:6px"><div style="height:100%;width:${grand/gmax*100}%;background:#8fe0b4;border-radius:9px"></div></div>
+  </div>
+  ${bars('এসএসসি',L.sP,20,'#1f9d62')}${bars('এইচএসসি',L.hP,25,'#4a78c4')}${L.wP===null?'':bars('লিখিত/MCQ (৫৫ এ কনভার্টেড)',L.wP,55,'#c8962e')}
+  ${sec('এসএসসি হিসাব',`<table style="width:100%;border-collapse:collapse">${row('এসএসসি মোট প্রাপ্ত নম্বর',bn(L.ssc))}${row('শারীরিক শিক্ষা (বাদ)','−'+bn(L.pe),1)}${row('ক্যারিয়ার শিক্ষা (বাদ)','−'+bn(L.ce),1)}${row('৪র্থ বিষয় ('+bn(L.s4)+' নম্বর, বাদ সর্বোচ্চ ৪০)','−'+bn(L.s4cut),1)}${row('গণনাযোগ্য নম্বর',bn(L.sAdj)+' / ১১১০')}${row('('+bn(L.sAdj)+' ÷ ১১১০) × ২০',f2(L.sP)+' / ২০')}</table>`)}
+  ${sec('এইচএসসি হিসাব',`<table style="width:100%;border-collapse:collapse">${row('এইচএসসি মোট প্রাপ্ত নম্বর',bn(L.hsc))}${row('৪র্থ বিষয় ('+bn(L.h4)+' নম্বর, বাদ সর্বোচ্চ ৮০)','−'+bn(L.h4cut),1)}${row('গণনাযোগ্য নম্বর',bn(L.hAdj)+' / ১২২০')}${row('('+bn(L.hAdj)+' ÷ ১২২০) × ২৫',f2(L.hP)+' / ২৫')}</table>`)}
+  ${sec('মোট',`<table style="width:100%;border-collapse:collapse">${row('এসএসসি ('+f2(L.sP)+') + এইচএসসি ('+f2(L.hP)+')',f2(L.t45)+' / ৪৫')}${L.wP===null?'':row('লিখিত/MCQ ('+bn(L.wr)+' / '+bn(L.wrt)+') → ৫৫ এ কনভার্ট',f2(L.wP)+' / ৫৫')+row('<b>সর্বমোট</b>','<b>'+f2(grand)+' / ১০০</b>')}</table>`)}
+  <div style="margin-top:12px;font-size:12px;color:#5b6b61">মার্ক বণ্টন: এসএসসি ২০% + এইচএসসি ২৫% = ৪৫, লিখিত/MCQ ৫৫%, সর্বমোট ১০০। ফলাফল আনুমানিক; চূড়ান্ত নিয়ম বিইউপির অফিসিয়াল নোটিশ অনুযায়ী মিলিয়ে নিন।</div>
+  <div style="margin-top:14px;padding-top:8px;border-top:1px solid #cfd9d1;text-align:center;font-size:13px;color:#5b6b61">ওয়েবসাইট তৈরি করেছেন <b style="color:#14261c">MD Tahsin Islam</b></div>
+  </div>`;
+}
+$('pdfbtn').onclick=async()=>{
+  const b=$('pdfbtn'),L=window.last;
+  if(!L)return;
+  if(!window.html2canvas||!window.jspdf){alert('PDF লাইব্রেরি লোড হয়নি। ইন্টারনেট সংযোগ দেখে পেজ রিফ্রেশ করো।');return;}
+  const old=b.textContent;b.disabled=true;b.textContent='PDF তৈরি হচ্ছে…';
+  const host=document.createElement('div');
+  host.style.cssText='position:fixed;left:-10000px;top:0;z-index:-1';
+  host.innerHTML=buildReport(L,$('sname').value.trim());
+  document.body.appendChild(host);
+  try{
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const cv=await html2canvas(host.firstElementChild,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    const pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+    const W=210,H=297;let w=W,h=cv.height*W/cv.width;
+    if(h>H){w=W*H/h;h=H;}
+    pdf.addImage(cv.toDataURL('image/jpeg',0.95),'JPEG',(W-w)/2,0,w,h);
+    const blob=pdf.output('blob');
+    let dl=null;try{dl=await claude.use('downloads');}catch(_){}
+    if(dl){await dl.save({filename:'BUP-Marks-Report.pdf',data:blob});}
+    else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='BUP-Marks-Report.pdf';document.body.appendChild(a);a.click();a.remove();}
+  }catch(e){if(!e||e.code!=='declined')alert('PDF তৈরি করা যায়নি। আবার চেষ্টা করো।');}
+  finally{host.remove();b.disabled=false;b.textContent=old;}
+};
+$('reset').onclick=()=>{document.querySelectorAll('input').forEach(i=>{i.value=i.id==='wrt'?'১০০':'';i.classList.remove('err');i.nextElementSibling.textContent='';});$('result').style.display='none';window.scrollTo({top:0,behavior:'smooth'});};
+document.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')$('go').click();}));
+</script>
+</body>
+</html>
